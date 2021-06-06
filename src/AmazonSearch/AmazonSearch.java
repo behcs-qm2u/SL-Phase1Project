@@ -67,11 +67,26 @@ public class AmazonSearch {
 			weSearchButton.click();
 		
 			/* milestone 4 - count search result */		
-			List<WebElement> ResultCount = driver.findElements(By.xpath("//*[@data-component-type='s-search-result']"));
-			System.out.println("Total search result are: " + ResultCount.size());
+			List<WebElement> ResList = driver.findElements(By.xpath("//*[@data-component-type='s-search-result']"));
+			System.out.println("Total search result are: " + ResList.size());
+			
+			String ResListCount = String.valueOf(ResList.size());
 			
 			WebElement ResultBarText = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']/span[1]"));
 			System.out.println("Result bar: " + ResultBarText.getText());
+			
+			// Example : 1-24 of over 60,000 results for
+
+			String ResultCountTxt = ResultBarText.getText().substring(2, 4);
+			System.out.println("ResultCountTxt = " + ResultCountTxt);
+			
+			if ( ResultCountTxt.equals(ResListCount)) {
+				System.out.println("Yes! Result is matching");	
+			}
+			else {
+				System.out.println("Oh no!! Result is not matching");
+			}
+			
 			
 			/* milestone 5 - capture screen */		
 			// Note: remember to get the io jar https://mvnrepository.com/artifact/commons-io/commons-io/2.6
@@ -87,28 +102,36 @@ public class AmazonSearch {
 			}
 			
 			
+			/* milestone 6 [extra]- list the price & name of the product */		
+			List<WebElement> ProductNameList = driver.findElements(By.xpath("//*[@data-component-type='s-search-result']//span[@class='a-size-medium a-color-base a-text-normal']"));
+			List<WebElement> ProductPriceList = driver.findElements(By.xpath("//*[@data-component-type='s-search-result']//span[@class='a-price-whole']"));
 			
+			System.out.println("Product List: [" + SearchVal + "] from category [" + Category + "]"  );
+			System.out.println("---------------------------------------------------------");
+			for ( int i = 0; i < ProductNameList.size(); i++ ) {
+				System.out.println( (i+1) + ". Rs" + ProductPriceList.get(i).getText() + " - " + ProductNameList.get(i).getText());
+			}
 			
 			
 		} catch (ClassNotFoundException e) {
 				
 			// e.printStackTrace();
 			System.out.println("Class not found");
-		}	catch (SQLException e) {
+		} catch (SQLException e) {
 			
 			//e.printStackTrace();
 			System.out.println("SQL Exception");
 				
 		}
 
-		
-	
-
 		// close after 5 seconds
 		try {
-			  Thread.sleep(5000); //time is in ms (1000 ms = 1 second)
-			} catch (InterruptedException e) {e.printStackTrace();}			
-		driver.close();
+			Thread.sleep(5000); //time is in ms (1000 ms = 1 second)
+			driver.close();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} 
+		
 	
 	
 	}
